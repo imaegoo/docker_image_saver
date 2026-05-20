@@ -11,6 +11,15 @@ jobs:
       - name: Pull Node.js 24 ARM64 image
         run: docker pull --platform linux/arm64 node:24
 
+      - name: Verify image architecture
+        run: |
+          ARCH=$(docker inspect node:24 --format='{{.Architecture}}')
+          echo "Image architecture: $ARCH"
+          if [ "$ARCH" != "arm64" ]; then
+            echo "Error: Expected arm64, got $ARCH"
+            exit 1
+          fi
+
       - name: Save image as tar.gz
         run: docker save node:24 | gzip > node-24-arm64.tar.gz
 
