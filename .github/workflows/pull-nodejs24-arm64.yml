@@ -1,0 +1,22 @@
+name: Pull Node.js 24 ARM64 Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pull-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull Node.js 24 ARM64 image
+        run: docker pull --platform linux/arm64 node:24
+
+      - name: Save image as tar.gz
+        run: docker save node:24 | gzip > node-24-arm64.tar.gz
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-24-arm64-image
+          path: node-24-arm64.tar.gz
+          retention-days: 90
